@@ -1,0 +1,59 @@
+#!/usr/bin/env rad
+---
+Build, package, and release KeyTee.
+---
+
+args:
+    version str                          # Version to release (e.g., 0.1.0)
+    tap_path str = "../homebrew-tap"     # Path to homebrew-tap repo
+    skip_build bool                      # Skip build, use existing .app
+
+// Paths
+stdout = quiet $`pwd`
+repo = stdout.trim()
+project = "{repo}/KeyTee"
+build_dir = "{project}/build"
+app_path = "{build_dir}/Build/Products/Release/KeyTee.app"
+zip_path = "{repo}/releases/KeyTee-{version}.zip"
+cask_path = "{repo}/{tap_path}/Casks/keytee.rb"
+
+// Build
+if not skip_build:
+    print("Building...")
+    quiet $`rm -rf {build_dir}` catch:
+        pass
+    $`xcodebuild -project {project}/KeyTee.xcodeproj -scheme KeyTee -configuration Release -derivedDataPath {build_dir} build`
+
+// Package
+print("Packaging...")
+$`mkdir -p {repo}/releases`
+quiet $`rm -f {zip_path}` catch:
+    pass
+stdout = quiet $`dirname {app_path}`
+app_dir = stdout.trim()
+$`cd {app_dir} && zip -r -y {zip_path} KeyTee.app -x "*.DS_Store"`
+
+// SHA256
+stdout = quiet $`shasum -a 256 {zip_path}`
+sha256 = stdout.split(" ")[0]
+
+// GitHub release
+print("Creating GitHub release...")
+tag = "v{version}"
+$`gh release create {tag} {zip_path} --repo amterp/keytee --title "KeyTee {tag}" --notes "KeyTee {tag}"`
+
+// Update cask
+print("Updating cask...")
+cask = read_file(cask_path).content
+cask = replace(cask, 'version "[^"]*"', 'version "{version}"')
+cask = replace(cask, 'sha256 "[^"]*"', 'sha256 "{sha256}"')
+write_file(cask_path, cask)
+
+// Push tap
+print("Pushing tap...")
+tap = "{repo}/{tap_path}"
+$`git -C {tap} add Casks/keytee.rb`
+$`git -C {tap} commit -m "keytee {version}"`
+$`git -C {tap} push`
+
+print("Done! v{version} released.")
