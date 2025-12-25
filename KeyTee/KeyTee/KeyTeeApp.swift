@@ -47,8 +47,7 @@ struct KeyTeeApp: App {
 
         // Settings window (opened via Settings menu item or Cmd+,)
         Settings {
-            Text("Settings coming soon")
-                .frame(width: 400, height: 300)
+            SettingsView(settingsStore: appState.settingsStore)
         }
     }
 

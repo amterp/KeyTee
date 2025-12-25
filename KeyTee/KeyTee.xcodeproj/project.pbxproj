@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C0B338E52EFD4B3700808732 /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = C0B338E42EFD4B3700808732 /* TOMLKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C0B3389B2EFD24B400808732 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B338E52EFD4B3700808732 /* TOMLKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = KeyTee;
 			packageProductDependencies = (
+				C0B338E42EFD4B3700808732 /* TOMLKit */,
 			);
 			productName = KeyTee;
 			productReference = C0B338892EFD24B200808732 /* KeyTee.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = C0B338802EFD24B200808732;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C0B338E32EFD4B3700808732 /* XCRemoteSwiftPackageReference "TOMLKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C0B3388A2EFD24B200808732 /* Products */;
 			projectDirPath = "";
@@ -566,6 +575,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C0B338E32EFD4B3700808732 /* XCRemoteSwiftPackageReference "TOMLKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LebJe/TOMLKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C0B338E42EFD4B3700808732 /* TOMLKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C0B338E32EFD4B3700808732 /* XCRemoteSwiftPackageReference "TOMLKit" */;
+			productName = TOMLKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C0B338812EFD24B200808732 /* Project object */;
 }

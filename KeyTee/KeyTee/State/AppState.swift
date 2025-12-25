@@ -12,6 +12,7 @@ import SwiftUI
 /// This is the central state container that holds:
 /// - Services (accessibility checker, keystroke capture, window tracking)
 /// - UI state (isPaused, hasCompletedOnboarding)
+/// - Settings (loaded from config file)
 /// - Captured text organized in CaptureStore
 ///
 /// Using @Observable (Swift 5.9+) for efficient, automatic UI updates.
@@ -30,7 +31,10 @@ class AppState {
     /// Tracks the frontmost app/window
     let windowTracker = ActiveWindowTracker()
 
-    // MARK: - State
+    // MARK: - Settings & State
+
+    /// Settings loaded from config file
+    let settingsStore = SettingsStore()
 
     /// Central store for all captured text, organized by buckets
     let captureStore = CaptureStore()
@@ -58,7 +62,15 @@ class AppState {
     // MARK: - Initialization
 
     init() {
+        // Sync CaptureStore with settings
+        syncSettingsToCaptureStore()
         setupCaptureHandler()
+    }
+
+    /// Sync settings to CaptureStore when settings change
+    private func syncSettingsToCaptureStore() {
+        captureStore.inactivityTimeout = settingsStore.inactivityTimeout
+        captureStore.retentionPeriod = settingsStore.retentionPeriodSeconds
     }
 
     // MARK: - Methods
