@@ -6,7 +6,7 @@
     <true/>
     <key>keychain-access-groups</key>
     <array>
-        <string>$(AppIdentifierPrefix)com.amterp.KeyTee</string>
+        <string>$(AppIdentifierPrefix)dev.amterp.KeyTee</string>
     </array>
 </dict>
 </plist>

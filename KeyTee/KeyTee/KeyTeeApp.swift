@@ -23,20 +23,45 @@ struct KeyTeeApp: App {
     // Global app state - shared across all views
     @State private var appState = AppState()
 
+    /// Menu bar icon varies by build type and pause state.
+    /// Debug builds use filled icons for visual distinction.
+    private var menuBarIconName: String {
+        #if DEBUG
+        appState.isPaused ? "keyboard.badge.ellipsis.fill" : "keyboard.fill"
+        #else
+        appState.isPaused ? "keyboard.badge.ellipsis" : "keyboard"
+        #endif
+    }
+
+    /// Window title includes "Dev" suffix in debug builds.
+    private var windowTitle: String {
+        #if DEBUG
+        "KeyTee Dev"
+        #else
+        "KeyTee"
+        #endif
+    }
+
     var body: some Scene {
         // Menu bar icon and dropdown menu
         MenuBarExtra {
-            // StartupView runs once to initialize services
-            StartupView(appState: appState)
             MenuDropdownView(appState: appState)
         } label: {
-            // Show different icon when paused
-            Image(systemName: appState.isPaused ? "keyboard.badge.ellipsis" : "keyboard")
+            // Note: The label renders immediately at app launch (unlike the dropdown content),
+            // so we use .task here to run startup logic as soon as the menu bar icon appears.
+            Image(systemName: menuBarIconName)
+                .task {
+                    appState.checkOnboarding()
+                    if appState.accessibilityChecker.isAccessibilityEnabled &&
+                       appState.hasCompletedOnboarding {
+                        appState.startCaptureIfAllowed()
+                    }
+                }
         }
 
         // Main window showing captured text history
         // This window is opened programmatically when user clicks "Open KeyTee" in menu
-        Window("KeyTee", id: "main") {
+        Window(windowTitle, id: "main") {
             MainWindowView(appState: appState)
                 .sheet(isPresented: $appState.showOnboarding) {
                     OnboardingView(accessibilityChecker: appState.accessibilityChecker) {
@@ -51,37 +76,6 @@ struct KeyTeeApp: App {
         }
     }
 
-    init() {
-        // Note: We can't pass appState to appDelegate in init because @State
-        // hasn't been initialized yet. We'll handle startup in the Window's onAppear.
-    }
-}
-
-/// Helper view that runs startup logic when the app launches.
-/// This ensures AppState is properly initialized before we try to use it.
-struct StartupView: View {
-    @Bindable var appState: AppState
-
-    var body: some View {
-        Color.clear
-            .frame(width: 0, height: 0)
-            .task {
-                // Run startup logic once when app launches
-                await startup()
-            }
-    }
-
-    @MainActor
-    private func startup() async {
-        // Check if we need to show onboarding
-        appState.checkOnboarding()
-
-        // If permission is already granted and onboarding done, start capture
-        if appState.accessibilityChecker.isAccessibilityEnabled &&
-           appState.hasCompletedOnboarding {
-            appState.startCaptureIfAllowed()
-        }
-    }
 }
 
 /// The dropdown menu that appears when clicking the menu bar icon.

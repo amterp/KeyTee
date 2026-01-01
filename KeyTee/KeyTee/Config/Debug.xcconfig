@@ -1,0 +1,10 @@
+// Debug.xcconfig - Development build settings
+
+#include "Shared.xcconfig"
+
+// Bundle identifier - distinct for dev builds
+PRODUCT_BUNDLE_IDENTIFIER = dev.amterp.KeyTee.dev
+
+// App display name
+PRODUCT_NAME = KeyTee Dev
+INFOPLIST_KEY_CFBundleDisplayName = KeyTee Dev

@@ -1,0 +1,12 @@
+// Shared.xcconfig - Common settings for all configurations
+
+// Team and signing
+DEVELOPMENT_TEAM = CV4835A2BN
+CODE_SIGN_STYLE = Automatic
+
+// Deployment
+MACOSX_DEPLOYMENT_TARGET = 14.6
+
+// App versioning
+CURRENT_PROJECT_VERSION = 1
+MARKETING_VERSION = 1.0

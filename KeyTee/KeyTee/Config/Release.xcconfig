@@ -1,0 +1,10 @@
+// Release.xcconfig - Production build settings
+
+#include "Shared.xcconfig"
+
+// Bundle identifier - production
+PRODUCT_BUNDLE_IDENTIFIER = dev.amterp.KeyTee
+
+// App display name
+PRODUCT_NAME = KeyTee
+INFOPLIST_KEY_CFBundleDisplayName = KeyTee
